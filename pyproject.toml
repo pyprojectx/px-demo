@@ -4,7 +4,7 @@ poetry = "poetry==1.1.7"
 # install the current directory as local package together with ipykernel
 # pw caches tool venvs based on the pip instal arguments,
 # so we use './micro-pipx' in stead of '.' to create a project specific venv with ipykernel and this project installed in
-ipykernel = "ipykernel ../micro-pipx"
+ipykernel = "ipykernel ../wrapped-pi"
 jupyter = "jupyter"
 
 httpie = "httpie"
