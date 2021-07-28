@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+
+##################################################################################
+#                                                        ___._                   #
+#                                                      .'  <0>'-.._              #
+#                                                     /  /.--.____")             #
+#                                                    |   \   __.-'~              #
+#                                                    |  :  -'/                   #
+#                                                   /:.  :.-'                    #
+#   __________                                     | : '. |                      #
+#   '--.____  '--------.______       _.----.-----./      :/                      #
+#           '--.__            `'----/       '-.      __ :/                       #
+#                 '-.___           :           \   .'  )/                        #
+#                       '---._           _.-'   ] /  _/                          #
+#                            '-._      _/     _/ / _/                            #
+#                                \_ .-'____.-'__< |  \___                        #
+#                                  <_______.\    \_\_---.7                       #
+#                                 |   /'=r_.-'     _\\ =/                        #
+#                             .--'   /            ._/'>                          #
+#                           .'   _.-'                                            #
+#                          / .--'                                                #
+#                         /,/                                                    #
+#                         |/`)                                                   #
+#                         'c=,                                                   #
+#                                                                                #
+# Python Wraptor                                                                 #
+# https://github.com/houbie/python-wraptor                                       #
+#                                                                                #
+# Copyright (c) 2021 Ivo Houbrechts                                              #
+#                                                                                #
+# Licensed under the MIT license                                                 #
+##################################################################################
+import hashlib
+import os
+import re
+import subprocess
+from pathlib import Path
+from venv import EnvBuilder
+
+import sys
+
+VERSION = "0.1.0"
+
+PYPROJECT = Path(__file__).with_name("pyproject.toml")
+VENVS_DIR = Path(os.environ.get("PYTHON_WRAPTOR_VENVS_DIR", Path.home().joinpath(".python-wraptor")), "venvs")
+UPGRADE_ARG = "--upgrade"
+CLEAR_ARG = "--clear"
+VERSION_ARG = "--version"
+HELP = f"usage: pw [{UPGRADE_ARG}|{CLEAR_ARG}|{VERSION_ARG}] [command] [args]"
+BIN_DIR = "Scripts" if os.name == "nt" else "bin"
+
+
+def toml_aliases(file):
+    if not file.exists():
+        raise Warning("pyproject.toml not found")
+    with open(file, "r") as file:
+        toml = file.read()
+        match = re.search(r"\[\s*tool.wraptor.alias\s*]\s*([^\[]+)", toml, re.MULTILINE)
+        if match:
+            alias_section = match.group(1)
+            matches = re.findall(
+                r'[\'"]?(\w+)[\'"]?\s*=\s*(\'{3}|"{3}|["\']{1})([^\'"][\s\S]+?)\2', alias_section, re.MULTILINE
+            )
+            return {match[0]: match[2] for match in matches}
+
+
+def toml_wraptor_value(file, key):
+    if not file.exists():
+        raise Warning("pyproject.toml not found")
+    with open(file, "r") as file:
+        toml = file.read()
+        match = re.search(r"\[\s*tool.wraptor\s*]\s*([^\[]+)", toml, re.MULTILINE)
+        if match:
+            wraptor_section = match.group(1)
+            match = re.search(
+                fr'[\'"]?{re.escape(key)}[\'"]?\s*=\s*(\'{{3}}|"{{3}}|["\']{{1}})([^\'"][\s\S]+?)\1',
+                wraptor_section,
+                re.MULTILINE,
+            )
+            if match:
+                return match.group(2)
+    raise Warning(f"{key} was not found under [tool.wraptor] in pyproject.toml")
+
+
+def install_tool(tool, cache_dir, upgrade=False, clear=False):
+    pip_args = toml_wraptor_value(PYPROJECT, tool)
+    md5 = hashlib.md5()
+    md5.update(pip_args.strip().encode())
+    install_dir = Path(
+        cache_dir, f"{tool.lower()}-{md5.hexdigest()}-{sys.version_info.major}.{sys.version_info.minor}"
+    ).absolute()
+    if install_dir.joinpath(BIN_DIR).is_dir() and not clear and not upgrade:
+        return install_dir
+    print(f"creating virtual environment for {tool} in {install_dir} ...")
+    EnvBuilder(clear=clear, with_pip=True).create(install_dir)
+    print(f"installing with pip: {pip_args} ...")
+    pip = install_dir.joinpath(BIN_DIR, "pip3")
+    process_args = [str(pip), "install"]
+    if upgrade:
+        process_args.append("--upgrade")
+    process_args += pip_args.split()
+    subprocess.check_call(process_args)
+    return install_dir
+
+
+def parse_args(argv, aliases=None):
+    if len(argv) < 2:
+        raise Warning(HELP)
+
+    if argv[1] == VERSION_ARG:
+        raise Warning(f"Python Wraptor version {VERSION}")
+
+    upgrade = argv[1] == UPGRADE_ARG
+    if upgrade:
+        argv.remove(UPGRADE_ARG)
+    clear = argv[1] == CLEAR_ARG
+    if clear:
+        argv.remove(CLEAR_ARG)
+    cmd, args = argv[1], argv[2:]
+    tool = None
+    if aliases and aliases.get(cmd):
+        alias = aliases.get(cmd)
+        if ":" in alias:
+            tool, alias = re.split(r"\s*:\s*", alias)
+        expanded = alias.split()
+        cmd = expanded[0]
+        args = [*expanded[1:], *args]
+    if not tool:
+        tool = cmd
+    return tool, cmd, args, upgrade, clear
+
+
+if __name__ == "__main__":
+    try:
+        tool, cmd, args, upgrade, clear = parse_args(sys.argv, toml_aliases(PYPROJECT))
+        tool_dir = install_tool(tool, VENVS_DIR, upgrade=upgrade, clear=clear)
+        process_args = [str(Path(tool_dir, BIN_DIR, cmd)), *args]
+        subprocess.check_call(process_args)
+    except Warning as w:
+        sys.exit(w)
