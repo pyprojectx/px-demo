@@ -7,7 +7,6 @@ poetry = "poetry==1.1.7"
 ipykernel = "ipykernel ../micro-pipx"
 jupyter = "jupyter"
 
-aws = "awscli"
 httpie = "httpie"
 
 [tool.wraptor.alias]

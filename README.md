@@ -24,9 +24,6 @@ in your [pyproject.toml](./pyproject.toml)
 ./pw http http://pie.dev/get
 # do you regularly make the same http request? just create an alias
 ./pw postjson
-
-# is your project running on AWS? Use the AWS CLI...
-./pw aws --version
 ```
 
 ## Jupyter notebooks
