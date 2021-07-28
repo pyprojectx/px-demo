@@ -1,5 +1,6 @@
 [tool.wraptor]
 poetry = "poetry==1.1.7"
+
 # install the current directory as local package together with ipykernel
 # pw caches tool venvs based on the pip instal arguments,
 # so we use './micro-pipx' in stead of '.' to create a project specific venv with ipykernel and this project installed in
@@ -7,19 +8,17 @@ ipykernel = "ipykernel ../micro-pipx"
 jupyter = "jupyter"
 
 aws = "awscli"
-doitlive = "doitlive"
 httpie = "httpie"
 
 [tool.wraptor.alias]
+test = "poetry run pytest"
+
+# the 'ipykernel:' prefix makes sure that the command is executed in the ipykernel virtual environment
 installkernel ="ipykernel:python -m ipykernel install --name=wrapped-pi"
-s3cp = "aws s3 cp --profile ivo"
-livedemo = "doitlive play demo.sh"
+nb = "jupyter notebook"
 https = "httpie:https"
 http = "httpie:http"
 postjson = "httpie:http POST pie.dev/post message=Awesome!"
-nb = "jupyter notebook"
-
-test = "poetry run pytest"
 
 [tool.poetry]
 name = "wrapped-pi"

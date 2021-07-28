@@ -43,7 +43,7 @@ Here's how you can create a project specific kernel for your notebooks:
 ./pw nb
 ```
 
-Now you can do the usual notebook things...
+Now you can do the usual [notebook](./wraptor.ipynb) things...
 
 ```python
 # project dependencies are available in the custom kernel
