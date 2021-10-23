@@ -1,24 +1,3 @@
-[tool.wraptor]
-poetry = "poetry==1.1.7"
-
-# install the current directory as local package together with ipykernel
-# pw caches tool venvs based on the pip instal arguments,
-# so we use './micro-pipx' in stead of '.' to create a project specific venv with ipykernel and this project installed in
-ipykernel = "ipykernel ../wrapped-pi"
-jupyter = "jupyter"
-
-httpie = "httpie"
-
-[tool.wraptor.alias]
-test = "poetry run pytest"
-
-# the 'ipykernel:' prefix makes sure that the command is executed in the ipykernel virtual environment
-installkernel ="ipykernel:python -m ipykernel install --name=wrapped-pi"
-nb = "jupyter notebook"
-https = "httpie:https"
-http = "httpie:http"
-postjson = "httpie:http POST pie.dev/post message=Awesome!"
-
 [tool.poetry]
 name = "wrapped-pi"
 version = "0.1.0"
@@ -37,3 +16,27 @@ pytest = "^6.2.4"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.wraptor]
+poetry = "poetry==1.1.11"
+
+# install the current directory as local package together with ipykernel
+# pw caches tool venvs based on the pip instal arguments,
+# so we use '../wrapped-pi' in stead of '.' to create a project specific venv with ipykernel and this project installed in
+ipykernel = "ipykernel ../wrapped-pi"
+jupyter = "jupyter"
+
+httpie = "httpie"
+
+[tool.wraptor.alias]
+install = "poetry install"
+update = "poetry update"
+clean-install = "rm -r .venv || true && rm -r .pytest_cache || true && ./pw poetry install --pw-clear"
+
+test = "poetry run pytest"
+
+# the 'ipykernel:' prefix makes sure that the command is executed in the ipykernel virtual environment
+installkernel ="ipykernel:python -m ipykernel install --name=wrapped-pi"
+nb = "jupyter notebook"
+https = "httpie:https"
+http = "httpie:http"
+postjson = "httpie:http POST pie.dev/post message=Awesome!"

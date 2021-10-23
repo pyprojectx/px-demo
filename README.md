@@ -16,8 +16,11 @@ in your [pyproject.toml](./pyproject.toml)
 # only prerequisite: make sure that python 3.7+ is on your path and cd into the project dir
 
 # build the project and run unit tests
-./pw poetry install
+./pw install
 ./pw test
+
+# if you need to cleanup generated files and virtual environments
+./pw clean-install
 
 # use common tools without the need to install them
 # not everyone has curl installed; httpie to the rescue!
