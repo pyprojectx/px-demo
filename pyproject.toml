@@ -1,42 +1,66 @@
-[tool.poetry]
-name = "wrapped-pi"
-version = "0.1.0"
-description = "python-wraptor example"
-authors = ["Houbie <ivo@houbrechts-it.be>"]
+[project]
+name = "px-demo"
+version = "0.8.4"
+description = "pyprojectx demo project"
+authors = [
+    { name = "Houbie", email = "ivo@houbrechts-it.be" },
+]
+dependencies = [
+    "numpy~=1.21",
+    "matplotlib~=3.5",
+]
+requires-python = ">=3.7"
+license = { text = "MIT" }
 
-[tool.poetry.dependencies]
-python = ">=3.7"
-numpy = "^1.21.1"
-matplotlib = "^3.4.2"
+[project.urls]
+homepage = "https://github.com/houbie/pyprojectx"
 
-[tool.poetry.dev-dependencies]
-pytest = "^6.2.4"
+[project.optional-dependencies]
+[tool]
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest~=6.2",
+]
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"
 
-[tool.wraptor]
-poetry = "poetry==1.1.11"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
-# install the current directory as local package together with ipykernel
-# pw caches tool venvs based on the pip instal arguments,
-# so we use '../wrapped-pi' in stead of '.' to create a project specific venv with ipykernel and this project installed in
-ipykernel = "ipykernel ../wrapped-pi"
-jupyter = "jupyter"
+[tool.black]
+line-length = 120
 
-httpie = "httpie"
+[tool.isort]
+profile = "black"
 
-[tool.wraptor.alias]
-install = "poetry install"
-update = "poetry update"
-clean-install = "rm -r .venv || true && rm -r .pytest_cache || true && ./pw poetry install --pw-clear"
+[tool.pylint.format]
+max-line-length = 120
 
-test = "poetry run pytest"
+[tool.pyprojectx]
+pdm = "pdm==1.12.6"
+black = "black==21.7b0"
+https = "httpie"
 
-# the 'ipykernel:' prefix makes sure that the command is executed in the ipykernel virtual environment
-installkernel ="ipykernel:python -m ipykernel install --name=wrapped-pi"
-nb = "jupyter notebook"
-https = "httpie:https"
-http = "httpie:http"
-postjson = "httpie:http POST pie.dev/post message=Awesome!"
+[tool.pyprojectx.aliases]
+install = "pdm install"
+build ="pdm install && pdm build"
+test = "pdm run pytest"
+run = "pdm run"
+outdated = "pdm update --dry-run --unconstrained --top"
+clean ="""\
+rm -rf __pypackages__
+rm -rf .pytest_cache
+rm -rf dist"""
+format-code = "pw@black src tests && pw@isort src tests"
+check = "pw@pylint src && pw@test"
+http = "@https:http"
+post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
+
+[tool.pyprojectx.os.win.aliases]
+clean = """\
+rmdir /s/q __pypackages__
+rmdir /s/q .pytest_cache
+rmdir /s/q dist"""

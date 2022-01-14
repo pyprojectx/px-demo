@@ -1,63 +1,30 @@
-# Python Wraptor examples
+# Pyprojectx demo project
 
-The [Python Wraptor](https://github.com/houbie/python-wraptor) scripts bootstrap the installation of tools used by a
-Python project.
+Pyprojectx(https://github.com/houbie/pyprojectx) can turn your [pyproject.toml](./pyproject.toml)
+config file into an executable build script.
 
-Just add the *pw* and *pw.bat* scripts to your projects and configure the (Python based) tools
-in your [pyproject.toml](./pyproject.toml)
-
-## Zero effort tool installation
-* Tutorials and open source projects: make sure that your audience can execute all your examples
-  without making any assumptions about prerequisite tools
-* Software projects: make sure that all team members use the correct (version of) tools and speed-up onboarding
-  of new team members
-
+You only need to download the wrapper scripts into your project directory (or any empty directory)
+* osx / linux :
 ```shell
-# only prerequisite: make sure that python 3.7+ is on your path and cd into the project dir
+curl -LO https://github.com/houbie/pyprojectx/releases/latest/download/wrappers.zip && unzip wrappers.zip && rm -f wrappers.zip
+```
+* windows: unpack the [wrappers zip](https://github.com/houbie/pyprojectx/releases/latest/download/wrappers.zip)
 
-# build the project and run unit tests
-./pw install
-./pw test
-
-# if you need to cleanup generated files and virtual environments
-./pw clean-install
-
-# use common tools without the need to install them
-# not everyone has curl installed; httpie to the rescue!
-./pw http http://pie.dev/get
-# do you regularly make the same http request? just create an alias
-./pw postjson
+and specify which tool(sets) you want to use in  _pyproject.toml_:
+```toml
+[tool.pyprojectx]
+pdm = "pdm==1.12.6"
+black = "black==21.7b0"
+https = "httpie"
 ```
 
-## Jupyter notebooks
-Jupyter notebooks make it easy to experiment with your project's code and it can improve documentation.
-
-I would not recommend adding Jupyter as dependency, as it can lead to version conflicts.
-
-Here's how you can create a project specific kernel for your notebooks:
-
-```shell
-# install a kernel named wrapped-pi
-./pw installkernel
-# start the Jupyter notebook server
-./pw nb
-```
-
-Now you can do the usual [notebook](./wraptor.ipynb) things...
-
-```python
-# project dependencies are available in the custom kernel
-import matplotlib.pyplot as plt
-import numpy as np
-
-%matplotlib inline
-
-x = np.arange(0,4*np.pi,0.1)
-y = np.sin(x)
-plt.plot(x,y)
-plt.show()
-
-# same for your project's modules
-from wrapped_pi.plot import simple_plot
-simple_plot()
-```
+Things you can try out:
+* show help: `./pw --help`
+* show available tools and commands: `./pw --info`
+* run a pdm command: `./pw pdm --help`
+* use httpie to execute https commands: `./pw https --help`
+* just type the first letters if you don't remember the full command: `./pw c`
+* just type enough (camel case) letters to identify an aliased command:
+  * `./pw post-json`  
+  * `./pw pJ`
+  * `./pw p`
