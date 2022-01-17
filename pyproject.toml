@@ -49,6 +49,8 @@ jupyter = """\
 jupyter
 ."""
 
+jupytext = "jupytext"
+
 [tool.pyprojectx.aliases]
 install = "pdm install"
 build ="pw@install && pw@pdm build"
@@ -64,6 +66,7 @@ http = "@https:http"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
 
 notebook = "jupyter notebook"
+generate-readme = "jupytext --to=md --opt hide_notebook_metadata=true README.ipynb"
 
 [tool.pyprojectx.os.win.aliases]
 clean = """\
