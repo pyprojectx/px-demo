@@ -44,20 +44,26 @@ pdm = "pdm==1.12.6"
 black = "black==21.7b0"
 https = "httpie"
 
+# install the current project as local package together with jupyter
+jupyter = """\
+jupyter
+."""
+
 [tool.pyprojectx.aliases]
 install = "pdm install"
-build ="pdm install && pdm build"
+build ="pw@install && pw@pdm build"
 test = "pdm run pytest"
 run = "pdm run"
 outdated = "pdm update --dry-run --unconstrained --top"
 clean ="""\
-rm -rf __pypackages__
-rm -rf .pytest_cache
-rm -rf dist"""
-format-code = "pw@black src tests && pw@isort src tests"
-check = "pw@pylint src && pw@test"
+rm -r __pypackages__
+rm -r .pytest_cache
+rm -r dist"""
+format-code = "black src tests"
 http = "@https:http"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
+
+notebook = "jupyter notebook"
 
 [tool.pyprojectx.os.win.aliases]
 clean = """\
