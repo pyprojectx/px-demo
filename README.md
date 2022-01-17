@@ -18,6 +18,8 @@ jupyter:
 -->
 
 <!-- #region -->
+Open [README.ipynb](README.ipynb) to view the full README (unfortunately github does not render notebook readme's)
+
 # Pyprojectx demo project
 
 Make it easy for your co-developers/contributors/tutorial readers to get started with your python project.
@@ -60,7 +62,6 @@ No need to install anything, the pyprojectx wrapper script will make sure that t
 from px_demo import plot
 plot.simple_plot()
 ```
-
 ## Lightweight
 The _pw_ wrapper script installs all the (Python) tools that your project uses in isolated virtual environments inside 
 _.pyprojectx_.
