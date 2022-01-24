@@ -73,6 +73,14 @@ This is analogous to how npm stores everything in the _node_modules_ subdirector
 
 All commands and arguments are then forwarded to the resp. virtual environment by just typing _./pw_ in front.
 
+<!-- #region pycharm={"name": "#%% md\n"} -->
+## Simplified CI/CD pipelines
+Run tests and build a distribution with `./pw build`. See it in action in this project's [github action workflow](.github/workflows/build.yml) or
+the [pyprojectx workflow](https://github.com/houbie/pyprojectx/tree/main/.github/workflows) for a full example.
+
+> **_NOTE:_**  If your CI/CD server runs on both linux and windows, you can merge the linux style `./pw build` and the windows style `pw build`
+> into a single command: `python pw build` 
+<!-- #endregion -->
 
 ## Getting started with pyprojectx in your own project
 You only need to download the wrapper scripts into your project directory (or any empty directory)
@@ -110,3 +118,4 @@ rmdir /s/q __pypackages__
 rmdir /s/q .pytest_cache
 rmdir /s/q dist"""
 ```
+
