@@ -53,8 +53,8 @@ jupytext = "jupytext"
 
 [tool.pyprojectx.aliases]
 install = "pdm install"
-build ="pw@install && pw@pdm build"
 test = "pdm run pytest"
+build ="pw@install && pw@test && pw@pdm build"
 run = "pdm run"
 outdated = "pdm update --dry-run --unconstrained --top"
 clean ="""\
