@@ -57,11 +57,14 @@ So in stead of using a _requirements.txt_, or worse, `pip install` instructions,
 
 No need to install anything, the pyprojectx wrapper script will make sure that the tools are available.
 
+Experimenting with your code in a Jupyter notebook f.e., becomes as easy as `./pw notebook`.
+
 ```python
 # the project and all required libraries are automatically available here
 from px_demo import plot
 plot.simple_plot()
 ```
+
 ## Lightweight
 The _pw_ wrapper script installs all the (Python) tools that your project uses in isolated virtual environments inside 
 _.pyprojectx_.
@@ -107,4 +110,3 @@ rmdir /s/q __pypackages__
 rmdir /s/q .pytest_cache
 rmdir /s/q dist"""
 ```
-
