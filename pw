@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 ##################################################################################
-# Pyprojectx                                                                     #
+# Pyprojectx wrapper script                                                      #
 # https://github.com/houbie/pyprojectx                                           #
 #                                                                                #
 # Copyright (c) 2021 Ivo Houbrechts                                              #
@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from venv import EnvBuilder
 
-VERSION = "0.8.4"
+VERSION = "0.8.7"
 
 PYPROJECTX_INSTALL_DIR_ENV_VAR = "PYPROJECTX_INSTALL_DIR"
 PYPROJECTX_PACKAGE_ENV_VAR = "PYPROJECTX_PACKAGE"
@@ -64,7 +64,8 @@ def get_options(args):
 
 def arg_parser():
     parser = argparse.ArgumentParser(
-        description="Execute commands or aliases defined in the [tool.pyprojectx] section of pyproject.toml.",
+        description="Execute commands or aliases defined in the [tool.pyprojectx] section of pyproject.toml. "
+                    "Use the -i or --info option to see available tools and aliases.",
     )
     parser.add_argument("--version", action="version", version=VERSION)
     parser.add_argument(
@@ -77,8 +78,8 @@ def arg_parser():
         "--install-dir",
         action="store",
         help=f"The directory where all tools (including pyprojectx) are installed; defaults to the"
-        f"{PYPROJECTX_INSTALL_DIR_ENV_VAR} environment value if set, else '.pyprojectx'"
-        f" in the same directory as the invoked pw script",
+             f"{PYPROJECTX_INSTALL_DIR_ENV_VAR} environment value if set, else '.pyprojectx'"
+             f" in the same directory as the invoked pw script",
     )
     parser.add_argument(
         "--force-install",
@@ -104,13 +105,13 @@ def arg_parser():
         "-i",
         action="store_true",
         help="Show the configuration details of a command in stead of running it. "
-        "If the command is not configured as tool or alias, a list with all available tools and aliases is shown.",
+             "If the command is not configured as tool or alias, a list with all available tools and aliases is shown.",
     )
     parser.add_argument(
         "--init",
         action="store_true",
         help="Create or prepare a pyproject.toml and pyprojectx wrapper scripts. "
-        "Run with '--init help' to show available init options",
+             "Run with '--init help' to show available init options",
     )
     parser.add_argument(
         "command", nargs=argparse.REMAINDER, help="The command/alias with optional arguments to execute."
@@ -142,7 +143,7 @@ def ensure_pyprojectx(options):
             pip_cmd + ["--upgrade", "pip"],
             stdout=out,
             check=True,
-        )
+            )
 
         if not options.quiet:
             print(

@@ -1,6 +1,6 @@
 [project]
 name = "px-demo"
-version = "0.8.4"
+version = "0.8.7"
 description = "pyprojectx demo project"
 authors = [
     { name = "Houbie", email = "ivo@houbrechts-it.be" },
@@ -40,27 +40,22 @@ profile = "black"
 max-line-length = 120
 
 [tool.pyprojectx]
-pdm = "pdm==1.12.6"
-black = "black==21.7b0"
+pdm = "pdm==1.13.3"
+black = "black==22.1.0"
 https = "httpie"
 
 # install the current project as local package together with jupyter
-jupyter = """\
-jupyter
-."""
+jupyter = ["jupyter", "."]
 
 jupytext = "jupytext"
 
 [tool.pyprojectx.aliases]
 install = "pdm install"
 test = "pdm run pytest"
-build ="pw@install && pw@test && pw@pdm build"
+build = "pw@install && pw@test && pw@pdm build"
 run = "pdm run"
 outdated = "pdm update --dry-run --unconstrained --top"
-clean ="""\
-rm -r __pypackages__
-rm -r .pytest_cache
-rm -r dist"""
+clean = "rm -r __pypackages__ .pytest_cache dist"
 format-code = "black src tests"
 http = "@https:http"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
@@ -69,7 +64,4 @@ notebook = "jupyter notebook"
 generate-readme = "jupytext --to=md --opt hide_notebook_metadata=true README.ipynb"
 
 [tool.pyprojectx.os.win.aliases]
-clean = """\
-rmdir /s/q __pypackages__
-rmdir /s/q .pytest_cache
-rmdir /s/q dist"""
+clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
