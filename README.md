@@ -8,7 +8,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.13.6
+      jupytext_version: 1.13.7
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
@@ -53,9 +53,10 @@ Things you can try out:
 ## Python libraries
 Make it a habit to manage the libraries that you use with a decent dependency manager like [Poetry](https://python-poetry.org/) or [PDM](https://pdm.fming.dev/).
 
-So in stead of using a _requirements.txt_, or worse, `pip install` instructions, list your dependencies in _pyproject.toml_.
+So instead of using a _requirements.txt_, or worse, `pip install` instructions, list your dependencies in _pyproject.toml_.
 
 No need to install anything, the pyprojectx wrapper script will make sure that the tools are available.
+All the required tools are installed inside the project dir (cfg. npm dev dependencies).
 
 Experimenting with your code in a Jupyter notebook f.e., becomes as easy as `./pw notebook`.
 
@@ -79,7 +80,7 @@ Run tests and build a distribution with `./pw build`. See it in action in this p
 the [pyprojectx workflow](https://github.com/houbie/pyprojectx/tree/main/.github/workflows) for a full example.
 
 > **_NOTE:_**  If your CI/CD server runs on both linux and windows, you can merge the linux style `./pw build` and the windows style `pw build`
-> into a single command: `python pw build` 
+> into a single command: `python pw build`
 <!-- #endregion -->
 
 ## Getting started with pyprojectx in your own project
@@ -106,16 +107,9 @@ build ="pw@install && pw@pdm build" # reuse aliases
 test = "pdm run pytest"
 format-code = "black src tests"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
-clean ="""\
-rm -r __pypackages__
-rm -r .pytest_cache
-rm -r dist"""
+clean ="rm -r __pypackages__ .pytest_cache dist"
 
 [tool.pyprojectx.os.win.aliases]
 # os specific aliases
-clean = """\
-rmdir /s/q __pypackages__
-rmdir /s/q .pytest_cache
-rmdir /s/q dist"""
-```
+clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
 
