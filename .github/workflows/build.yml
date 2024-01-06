@@ -28,7 +28,7 @@ jobs:
           cache-name: .pyprojectx
         with:
           path: .pyprojectx
-          key: ${{ runner.os }}-${{ matrix.python-version }}-pyprojectx
+          key: ${{ hashFiles('pyproject.toml') }}-${{ runner.os }}-${{ matrix.python-version }}-pyprojectx
 
       - name: Set up Python ${{ matrix.python-version }} on ${{ matrix.os }}
         uses: actions/setup-python@v2
