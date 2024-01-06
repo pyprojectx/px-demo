@@ -131,3 +131,4 @@ dmypy.json
 .idea
 /.pdm.toml
 /.pyprojectx/
+/.pdm-python
