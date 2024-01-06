@@ -1,6 +1,6 @@
 [tool.pyprojectx]
 main = ["pdm", "ruff", "pre-commit", "px-utils", "httpie"]
-jupyter = ["jupyterlab", "-e ."]
+jupyter = ["jupyterlab==4.0.10", "jupytext==1.16.0", "-e ."]
 
 [tool.pyprojectx.aliases]
 install = "pdm install"
@@ -14,6 +14,7 @@ outdated = "pdm update --outdated"
 clean = "pxrm dist .venv .ipynb_checkpoints"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
 notebook = "jupyter lab -y"
+generate-readme = { cmd = "jupytext --to=md --opt hide_notebook_metadata=true README.ipynb", ctx = "jupyter" }
 
 [tool.pyprojectx.os.win.aliases]
 clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
