@@ -44,7 +44,7 @@ Things you can try out:
 * use httpie to execute https commands: `./pw https --help`
 * just type the first letters if you don't remember the full command: `./pw c`
 * just type enough (camel case) letters to identify an aliased command:
-  * `./pw post-json`  
+  * `./pw post-json`
   * `./pw pJ`
   * `./pw p`
 
@@ -67,7 +67,7 @@ plot.simple_plot()
 ```
 
 ## Lightweight
-The _pw_ wrapper script installs all the (Python) tools that your project uses in isolated virtual environments inside 
+The _pw_ wrapper script installs all the (Python) tools that your project uses in isolated virtual environments inside
 _.pyprojectx_.
 
 This is analogous to how npm stores everything in the _node_modules_ subdirectory of your project directory.

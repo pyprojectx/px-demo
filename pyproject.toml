@@ -1,6 +1,11 @@
 [tool.pyprojectx]
-main = ["pdm", "ruff", "pre-commit", "px-utils", "httpie"]
-jupyter = ["jupyterlab==4.0.10", "jupytext==1.16.0", "-e ."]
+
+[tool.pyprojectx.main]
+requirements = ["pdm", "ruff", "pre-commit", "px-utils", "httpie"]
+post-install = "pre-commit install"
+
+[tool.pyprojectx.jupyter]
+requirements = ["jupyterlab==4.0.10", "jupytext==1.16.0", "-e ."]
 
 [tool.pyprojectx.aliases]
 install = "pdm install"
@@ -36,8 +41,7 @@ readme = { file = "README.ipynb", content-type = "application/x-ipynb+json" }
 license = { text = "MIT" }
 
 dependencies = [
-    "numpy<1.26",
-    "matplotlib>=3.5",
+    "pycowsay>=0.0.0.2",
 ]
 
 [tool.pytest.ini_options]
