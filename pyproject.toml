@@ -24,11 +24,14 @@ generate-readme = { cmd = "jupytext --to=md --opt hide_notebook_metadata=true RE
 [tool.pyprojectx.os.win.aliases]
 clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
 
+
 [tool.pdm]
 package-type = "library"
-[tool.pdm.dev-dependencies]
-test = ["pytest>=7.4.3"]
 
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=7.4.4",
+]
 [project]
 name = "px-demo"
 version = "2.0.0"
