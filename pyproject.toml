@@ -61,6 +61,10 @@ pycowsay = ">=0.0.0.2"
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.4.3"
 
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.4"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
