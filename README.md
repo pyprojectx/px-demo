@@ -60,10 +60,18 @@ All the required tools are installed inside the project dir (cfg. npm dev depend
 
 Experimenting with your code in a Jupyter notebook f.e., becomes as easy as `./pw notebook`.
 
+**NOTE:** you need to restart the notebook kernel to activate changes to the project.
+
 ```python
 # the project and all required libraries are automatically available here
-from px_demo import plot
-plot.simple_plot()
+from pycowsay.main import main as cowsay
+from px_demo import moo
+
+print("running project code")
+moo.say_moo()
+
+print("using pycowsay library")
+cowsay()
 ```
 
 ## Lightweight
@@ -74,7 +82,7 @@ This is analogous to how npm stores everything in the _node_modules_ subdirector
 
 All commands and arguments are then forwarded to the resp. virtual environment by just typing _./pw_ in front.
 
-<!-- #region pycharm={"name": "#%% md\n"} -->
+<!-- #region jupyter={"outputs_hidden": false} pycharm={"name": "#%% md\n"} -->
 ## Simplified CI/CD pipelines
 Run tests and build a distribution with `./pw build`. See it in action in this project's [github action workflow](.github/workflows/build.yml) or
 the [pyprojectx workflow](https://github.com/houbie/pyprojectx/tree/main/.github/workflows) for a full example.
@@ -83,5 +91,7 @@ the [pyprojectx workflow](https://github.com/houbie/pyprojectx/tree/main/.github
 > into a single command: `python pw build`
 <!-- #endregion -->
 
+<!-- #region jupyter={"outputs_hidden": false} -->
 ## Getting started with pyprojectx in your own project
 See the [documentation](https://pyprojectx.github.io/) for more details.
+<!-- #endregion -->
