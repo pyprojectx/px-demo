@@ -1,6 +1,11 @@
 [tool.pyprojectx]
-main = ["poetry", "ruff", "pre-commit", "px-utils", "httpie"]
-jupyter = ["jupyterlab==4.0.10", "jupytext==1.16.0", "-e ."]
+
+[tool.pyprojectx.main]
+requirements = ["poetry", "ruff", "pre-commit", "px-utils", "httpie"]
+post-install = "pre-commit install"
+
+[tool.pyprojectx.jupyter]
+requirements = ["jupyterlab==4.0.10", "jupytext==1.16.0", "-e ."]
 
 [tool.pyprojectx.aliases]
 install = "poetry install"
@@ -51,8 +56,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = ">=3.8"
-numpy = "<1.26"
-matplotlib = ">=3.5"
+pycowsay = ">=0.0.0.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.4.3"
