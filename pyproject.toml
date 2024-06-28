@@ -1,21 +1,21 @@
 [tool.pyprojectx]
 
 [tool.pyprojectx.main]
-requirements = ["poetry", "ruff", "pre-commit", "px-utils", "httpie"]
+requirements = ["pdm", "ruff", "pre-commit", "px-utils", "httpie"]
 post-install = "pre-commit install"
 
 [tool.pyprojectx.jupyter]
 requirements = ["jupyterlab==4.0.10", "jupytext==1.16.0", "-e ."]
 
 [tool.pyprojectx.aliases]
-install = "poetry install"
-test = "poetry run pytest"
+install = "pdm install"
+test = "pdm run pytest"
 format = ["ruff format", "ruff check --select I --fix"]
 lint = ["ruff check"]
 check = ["@lint", "@test"]
-build = ["@install", "@check", "poetry build"]
-run = "poetry run"
-outdated = "poetry update --outdated"
+build = ["@install", "@check", "pdm build"]
+run = "pdm run"
+outdated = "pdm update --outdated"
 clean = "pxrm dist .venv .ipynb_checkpoints"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
 notebook = "jupyter lab -y"
@@ -24,6 +24,10 @@ generate-readme = { cmd = "jupytext --to=md --opt hide_notebook_metadata=true RE
 [tool.pyprojectx.os.win.aliases]
 clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
 
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=7.4.4",
+]
 [project]
 name = "px-demo"
 version = "2.0.0"
@@ -35,8 +39,16 @@ requires-python = ">=3.8"
 readme = { file = "README.ipynb", content-type = "application/x-ipynb+json" }
 license = { text = "MIT" }
 
+dependencies = [
+    "pycowsay>=0.0.0.2",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [tool.ruff]
 line-length = 120
@@ -46,26 +58,3 @@ fixable = ["ALL"]
 ignore = ["ISC001", "ANN", "FA", "FBT", "D100", "D102", "D103", "D104", "D105", "D213", "D203", "T201", "TRY003", "EM102", "COM812", "S602", "S603", "S604", "S605", "S607", "S324"]
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101", "I001", "INP001"]
-
-[tool.poetry]
-name = "px-demo"
-version = "2.0.0"
-description = "pyprojectx demo project"
-authors = ["Your Name <you@example.com>"]
-license = "MIT"
-readme = "README.md"
-
-[tool.poetry.dependencies]
-python = ">=3.8"
-pycowsay = ">=0.0.0.2"
-
-[tool.poetry.group.dev.dependencies]
-pytest = ">=7.4.3"
-
-
-[tool.poetry.group.test.dependencies]
-pytest = "^7.4.4"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
