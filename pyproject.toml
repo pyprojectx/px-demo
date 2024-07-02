@@ -1,21 +1,40 @@
-[tool.pyprojectx]
+[project]
+name = "px_demo"
+version = "2.0.0"
+description = "pyprojectx demo project"
+authors = [
+    { name = "Houbie", email = "ivo@houbrechts-it.be" },
+]
+requires-python = ">=3.9"
+readme = { file = "README.ipynb", content-type = "application/x-ipynb+json" }
+license = { text = "MIT" }
+
+dependencies = [
+    "pycowsay>=0.0.0.2",
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.pyprojectx.venv]
+requirements = ["-r pyproject.toml", "pytest"]
+dir = ".venv"
 
 [tool.pyprojectx.main]
-requirements = ["pdm", "ruff", "pre-commit", "px-utils", "httpie"]
+requirements = ["ruff", "pre-commit", "px-utils", "httpie", "build"]
 post-install = "pre-commit install"
 
 [tool.pyprojectx.jupyter]
-requirements = ["jupyterlab==4.0.10", "jupytext==1.16.0", "-e ."]
+requirements = ["jupyterlab", "jupytext", "-e ."]
 
 [tool.pyprojectx.aliases]
-install = "pdm install"
-test = "pdm run pytest"
+install = "pw@ --install-context venv"
+test = { cmd = "pytest", ctx = "venv" }
 format = ["ruff format", "ruff check --select I --fix"]
 lint = ["ruff check"]
 check = ["@lint", "@test"]
-build = ["@install", "@check", "pdm build"]
-run = "pdm run"
-outdated = "pdm update --outdated"
+build = ["@install", "@check", "python -m build"]
 clean = "pxrm dist .venv .ipynb_checkpoints"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
 notebook = "jupyter lab -y"
@@ -24,31 +43,8 @@ generate-readme = { cmd = "jupytext --to=md --opt hide_notebook_metadata=true RE
 [tool.pyprojectx.os.win.aliases]
 clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
 
-[tool.pdm.dev-dependencies]
-test = [
-    "pytest>=7.4.4",
-]
-[project]
-name = "px-demo"
-version = "2.0.0"
-description = "pyprojectx demo project"
-authors = [
-    { name = "Houbie", email = "ivo@houbrechts-it.be" },
-]
-requires-python = ">=3.8"
-readme = { file = "README.ipynb", content-type = "application/x-ipynb+json" }
-license = { text = "MIT" }
-
-dependencies = [
-    "pycowsay>=0.0.0.2",
-]
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-
-[build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
 
 [tool.ruff]
 line-length = 120
