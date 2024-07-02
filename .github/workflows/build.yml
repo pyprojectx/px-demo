@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ main, poetry ]
+    branches: [ main, poetry, simple ]
 
 jobs:
   build:
