@@ -7,6 +7,9 @@ post-install = "pre-commit install"
 [tool.pyprojectx.jupyter]
 requirements = ["jupyterlab==4.3.0", "jupytext==1.16.4", "-e ."]
 
+[tool.pyprojectx.asciinema]
+requirements = ["asciinema"]
+
 [tool.pyprojectx.aliases]
 install = "uv sync"
 update = "uv lock"
@@ -21,6 +24,8 @@ clean = "pxrm dist .venv .ipynb_checkpoints"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
 notebook = "jupyter lab -y"
 generate-readme = { cmd = "jupytext --to=md --opt hide_notebook_metadata=true README.ipynb", ctx = "jupyter" }
+record-commands = "asciinema rec demo.cast -q --overwrite -i 0.5"
+generate-svg = "cat demo.cast| svg-term --out cast.svg" # requires npm i -g svg-term-cli
 
 [tool.pyprojectx.os.win.aliases]
 clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
