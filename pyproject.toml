@@ -1,21 +1,22 @@
 [tool.pyprojectx]
 lock-python-version = "3.8"
 [tool.pyprojectx.main]
-requirements = ["pdm", "ruff", "pre-commit", "px-utils", "httpie"]
+requirements = ["uv", "ruff", "pre-commit", "px-utils", "httpie"]
 post-install = "pre-commit install"
 
 [tool.pyprojectx.jupyter]
 requirements = ["jupyterlab==4.3.0", "jupytext==1.16.4", "-e ."]
 
 [tool.pyprojectx.aliases]
-install = "pdm install"
-test = "pdm run pytest"
+install = "uv sync"
+update = "uv lock"
+test = "uv run pytest"
 format = ["ruff format", "ruff check --select I --fix"]
 lint = ["ruff check"]
 check = ["@lint", "@test"]
-build = ["@install", "@check", "pdm build"]
-run = "pdm run"
-outdated = "pdm update --outdated"
+build = ["@install", "@check", "uv build"]
+run = "uv run"
+outdated = "uv pip list --outdated"
 clean = "pxrm dist .venv .ipynb_checkpoints"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
 notebook = "jupyter lab -y"
@@ -24,10 +25,6 @@ generate-readme = { cmd = "jupytext --to=md --opt hide_notebook_metadata=true RE
 [tool.pyprojectx.os.win.aliases]
 clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
 
-[tool.pdm.dev-dependencies]
-test = [
-    "pytest>=8.3",
-]
 [project]
 name = "px-demo"
 version = "2.0.0"
@@ -36,19 +33,23 @@ authors = [
     { name = "Houbie", email = "ivo@houbrechts-it.be" },
 ]
 requires-python = ">=3.8"
-readme = { file = "README.ipynb", content-type = "application/x-ipynb+json" }
+readme = { file = "README.md", content-type = "text/markdown" }
 license = { text = "MIT" }
 
 dependencies = [
     "pycowsay>=0.0.0.2",
+]
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [build-system]
-requires = ["pdm-backend"]
-build-backend = "pdm.backend"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [tool.ruff]
 line-length = 120
