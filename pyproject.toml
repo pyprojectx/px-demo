@@ -1,14 +1,19 @@
 [tool.pyprojectx]
 lock-python-version = "3.8"
+scripts_ctx = "venv" # all scripts in the bin directory can use project code and dependencies
 [tool.pyprojectx.main]
 requirements = ["uv", "ruff", "pre-commit", "px-utils", "httpie"]
 post-install = "pre-commit install"
 
+[tool.pyprojectx.venv]
+dir = ".venv" # managed by uv
+post-install = "@install" # make sure the venv is installed with all dependencies
+
 [tool.pyprojectx.jupyter]
-requirements = ["jupyterlab==4.3.0", "jupytext==1.16.4", "-e ."]
+requirements = ["jupyterlab==4.3.0", "jupytext==1.16.4", "-e ."] # install the project in editable mode
 
 [tool.pyprojectx.asciinema]
-requirements = ["asciinema"]
+requirements = ["asciinema"] # install asciinema separately from all other tools
 
 [tool.pyprojectx.aliases]
 install = "uv sync"
@@ -64,3 +69,4 @@ fixable = ["ALL"]
 ignore = ["ISC001", "ANN", "FA", "FBT", "D100", "D102", "D103", "D104", "D105", "D213", "D203", "T201", "TRY003", "EM102", "COM812", "S602", "S603", "S604", "S605", "S607", "S324"]
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101", "I001", "INP001"]
+"bin/*" = ['INP001']
