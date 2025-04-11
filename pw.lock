@@ -1,0 +1,8 @@
+[main]
+requirements = ["certifi==2025.1.31", "cfgv==3.4.0", "charset-normalizer==3.4.1", "colorama==0.4.6 ; sys_platform == 'win32'", "defusedxml==0.7.1", "distlib==0.3.9", "filelock==3.16.1 ; python_full_version < '3.9'", "filelock==3.18.0 ; python_full_version >= '3.9'", "httpie==3.2.4", "identify==2.6.1 ; python_full_version < '3.9'", "identify==2.6.9 ; python_full_version >= '3.9'", "idna==3.10", "markdown-it-py==3.0.0", "mdurl==0.1.2", "multidict==6.1.0 ; python_full_version < '3.9'", "multidict==6.4.3 ; python_full_version >= '3.9'", "nodeenv==1.9.1", "pip==25.0.1", "platformdirs==4.3.6 ; python_full_version < '3.9'", "platformdirs==4.3.7 ; python_full_version >= '3.9'", "pre-commit==3.5.0 ; python_full_version < '3.9'", "pre-commit==4.2.0 ; python_full_version >= '3.9'", "px-utils==1.1.2", "pygments==2.19.1", "pysocks==1.7.1", "pyyaml==6.0.2", "requests-toolbelt==1.0.0", "requests==2.32.3", "rich==14.0.0", "ruff==0.11.5", "setuptools==75.3.2 ; python_full_version < '3.9'", "setuptools==78.1.0 ; python_full_version >= '3.9'", "typing-extensions==4.13.2 ; python_full_version < '3.11'", "urllib3==2.2.3 ; python_full_version < '3.9'", "urllib3==2.4.0 ; python_full_version >= '3.9'", "uv==0.6.14", "virtualenv==20.30.0"]
+hash = "6a3696583208adcc8a474a1c8abcfd0b"
+post-install = "pre-commit install"
+
+[asciinema]
+requirements = ["asciinema==2.4.0"]
+hash = "4a03a86b8a53e582e70251e110b111c6"
