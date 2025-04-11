@@ -1,40 +1,33 @@
 [tool.pyprojectx]
 lock-python-version = "3.8"
-scripts_ctx = "venv" # all scripts in the bin directory can use project code and dependencies
 [tool.pyprojectx.main]
-requirements = ["uv", "ruff", "pre-commit", "px-utils", "httpie"]
+requirements = ["pdm", "ruff", "pre-commit", "px-utils", "httpie"]
 post-install = "pre-commit install"
 
-[tool.pyprojectx.venv]
-dir = ".venv" # managed by uv
-post-install = "@install" # make sure the venv is installed with all dependencies
-
 [tool.pyprojectx.jupyter]
-requirements = ["jupyterlab==4.3.0", "jupytext==1.16.4", "-e ."] # install the project in editable mode
-
-[tool.pyprojectx.asciinema]
-requirements = ["asciinema"] # install asciinema separately from all other tools
+requirements = ["jupyterlab==4.3.0", "jupytext==1.16.4", "-e ."]
 
 [tool.pyprojectx.aliases]
-install = "uv sync"
-update = "uv lock"
-test = "uv run pytest"
+install = "pdm install"
+test = "pdm run pytest"
 format = ["ruff format", "ruff check --select I --fix"]
 lint = ["ruff check"]
 check = ["@lint", "@test"]
-build = ["@install", "@check", "uv build"]
-run = "uv run"
-outdated = "uv pip list --outdated"
+build = ["@install", "@check", "pdm build"]
+run = "pdm run"
+outdated = "pdm update --outdated"
 clean = "pxrm dist .venv .ipynb_checkpoints"
 post-json = "https POST pie.dev/post message='Pyprojectx is awesome!'"
 notebook = "jupyter lab -y"
 generate-readme = { cmd = "jupytext --to=md --opt hide_notebook_metadata=true README.ipynb", ctx = "jupyter" }
-record-commands = "asciinema rec demo.cast -q --overwrite -i 0.5"
-generate-svg = "cat demo.cast| svg-term --out cast.svg" # requires npm i -g svg-term-cli
 
 [tool.pyprojectx.os.win.aliases]
 clean = "rmdir /s/q __pypackages__ .pytest_cache dist"
 
+[tool.pdm.dev-dependencies]
+test = [
+    "pytest>=8.3",
+]
 [project]
 name = "px-demo"
 version = "2.0.0"
@@ -43,23 +36,19 @@ authors = [
     { name = "Houbie", email = "ivo@houbrechts-it.be" },
 ]
 requires-python = ">=3.8"
-readme = { file = "README.md", content-type = "text/markdown" }
+readme = { file = "README.ipynb", content-type = "application/x-ipynb+json" }
 license = { text = "MIT" }
 
 dependencies = [
     "pycowsay>=0.0.0.2",
-]
-[dependency-groups]
-dev = [
-    "pytest>=8.3",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [tool.ruff]
 line-length = 120
@@ -69,4 +58,3 @@ fixable = ["ALL"]
 ignore = ["ISC001", "ANN", "FA", "FBT", "D100", "D102", "D103", "D104", "D105", "D213", "D203", "T201", "TRY003", "EM102", "COM812", "S602", "S603", "S604", "S605", "S607", "S324"]
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101", "I001", "INP001"]
-"bin/*" = ['INP001']

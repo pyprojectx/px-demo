@@ -8,7 +8,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.16.4
+      jupytext_version: 1.16.0
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
@@ -65,7 +65,6 @@ Experimenting with your code in a Jupyter notebook f.e., becomes as easy as `./p
 ```python
 # the project and all required libraries are automatically available here
 from pycowsay.main import main as cowsay
-
 from px_demo import moo
 
 print("running project code")
