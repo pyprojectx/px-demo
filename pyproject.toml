@@ -17,7 +17,7 @@ requirements = ["asciinema"] # install asciinema separately from all other tools
 
 [tool.pyprojectx.aliases]
 install = "uv sync"
-update = "uv lock"
+update = "uv lock --upgrade"
 test = "uv run pytest"
 format = ["ruff format", "ruff check --select I --fix"]
 lint = ["ruff check"]
