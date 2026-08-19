@@ -9,8 +9,10 @@ Python code (`src/px_demo/moo.py` — one function that shells out to `pycowsay`
 the build something to build. **The real content is `pyproject.toml` and `README.ipynb`**: this repo
 is documentation-by-example, so config changes are usually the point, not incidental.
 
-Sibling branches demonstrate the same project with other dependency managers: `main` (uv), `pdm`,
-`poetry`. CI builds all three. A change to the demo story often needs porting across them.
+**This is the `main` branch**, which uses uv. Sibling branches demonstrate the same project with
+other dependency managers: `pdm` and `poetry`. CI builds all three. A change to the demo story often
+needs porting across them, which means translating the dependency-manager specifics rather than
+cherry-picking verbatim.
 
 ## Commands
 
@@ -37,23 +39,24 @@ Aliases resolve on unique prefixes and camel-case initials: `./pw c`, `./pw pJ`.
 ## How the pyprojectx config is wired
 
 - `[tool.pyprojectx.<name>]` blocks each define an isolated tool context. `main` holds uv/ruff/
-  pre-commit/px-utils/httpie; `venv` maps to the uv-managed `.venv`; `jupyter` and `asciinema` are
+  prek/px-utils/httpie; `venv` maps to the uv-managed `.venv`; `jupyter` and `asciinema` are
   kept separate so their heavy deps never leak into the others.
 - `scripts_ctx = "venv"` is why scripts in `bin/` can import `px_demo` directly.
-- `main.post-install = "pre-commit install"` — hooks get wired up the first time any `./pw` command
-  runs. The hooks call `pw format` and `pw lint`, so pre-commit needs `pw` on PATH.
+- `main.post-install = "prek install"` — hooks get wired up the first time any `./pw` command
+  runs. The hooks call `pw format` and `pw lint`, so prek needs `pw` on PATH.
 - `pw.lock` pins the exact tool versions per context (separate from `uv.lock`, which pins project
-  dependencies). Regenerate it by letting `./pw` reinstall, not by hand.
+  dependencies). Regenerate it with `./pw --lock`, not by hand.
 
 ## Editing the README
 
 `README.md` is **generated** from `README.ipynb` by jupytext (`./pw generate-readme`). Edit the
 notebook, then regenerate — direct edits to `README.md` are lost. The notebook's code cells are
-executed documentation and must keep working against the project.
+executed documentation and must keep working against the project; re-run them so the committed
+outputs stay truthful.
 
 ## Style
 
 ruff with `select = ["ALL"]`, line length 120, and a curated `ignore` list in `pyproject.toml`;
-tests and `bin/` have per-file relaxations. Target is `requires-python = ">=3.8"` and CI tests 3.9
-and 3.12 on Ubuntu and Windows, so keep code and aliases cross-platform (note the
+tests and `bin/` have per-file relaxations. Target is `requires-python = ">=3.9"` and CI tests 3.9
+and 3.14 on Ubuntu and Windows, so keep code and aliases cross-platform (note the
 `[tool.pyprojectx.os.win.aliases]` override for `clean`).
