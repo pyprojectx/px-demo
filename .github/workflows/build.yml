@@ -2,7 +2,7 @@ name: Build
 
 on:
   push:
-    branches: [ main, pdm, poetry, simple ]
+    branches: [ main, pdm, poetry ]
 
 jobs:
   build:
@@ -12,7 +12,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ Ubuntu, Windows ]
-        python-version: [ "3.9", "3.12" ]
+        python-version: [ "3.9", "3.14" ]
         include:
           - os: Ubuntu
             image: ubuntu-latest
@@ -20,10 +20,10 @@ jobs:
             image: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Cache .pyprojectx
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         env:
           cache-name: .pyprojectx
         with:
@@ -31,7 +31,7 @@ jobs:
           key: ${{ hashFiles('pyproject.toml') }}-${{ runner.os }}-${{ matrix.python-version }}-pyprojectx
 
       - name: Set up Python ${{ matrix.python-version }} on ${{ matrix.os }}
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
