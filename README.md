@@ -8,7 +8,7 @@ jupyter:
       extension: .md
       format_name: markdown
       format_version: '1.3'
-      jupytext_version: 1.16.0
+      jupytext_version: 1.19.5
   kernelspec:
     display_name: Python 3 (ipykernel)
     language: python
@@ -17,81 +17,138 @@ jupyter:
 
 -->
 
-<!-- #region -->
 Open [README.ipynb](README.ipynb) to view the full README (unfortunately github does not render notebook readme's)
 
 # Pyprojectx demo project
 
-Make it easy for your co-developers/contributors/tutorial readers to get started with your python project.
+> Clone the repo, run one command, everything works.
 
-If you have python 3.8+ and git installed, you're ready to go. No need to install jupyter, libraries, etc.
+Onboarding on a Python project usually starts with a wall of instructions: install the right Python,
+create a virtualenv, activate it (differently on Windows), install the dependencies, and then install
+the linter, the formatter, the test runner and the build tool that CI happens to use.
 
-Clone the project and start experimenting:
+[Pyprojectx](https://github.com/pyprojectx/pyprojectx) replaces all of that with a small `pw` script
+that you commit next to your [pyproject.toml](./pyproject.toml). It bootstraps every tool your project
+needs, on demand, in isolated environments inside the project directory.
+
+If you have python 3.9+ and git, you're ready to go. There is nothing else to install: no jupyter,
+no pdm, no ruff, not even pyprojectx itself.
 
 ```shell
-git clone https://github.com/houbie/px-demo.git
+git clone --branch pdm https://github.com/houbie/px-demo.git
+cd px-demo
 ./pw notebook
 ```
 
-Pyprojectx(https://github.com/houbie/pyprojectx) can turn your [pyproject.toml](./pyproject.toml)
-config file into an executable build script.
+That one command installed JupyterLab, installed this project in editable mode and opened the notebook
+you are reading right now.
+
+### Things to try
+
+| Command | What happens |
+|---|---|
+| `./pw -i` | list every tool and alias, straight from `pyproject.toml` |
+| `./pw build` | install dependencies, lint, test and build a wheel |
+| `./pw pdm --help` or `./pw https --help` | run PDM or HTTPie without ever installing them |
+| `./pw post-json` | POST some json to pie.dev with HTTPie |
+| `./pw c` | aliases resolve on a unique prefix (here: `check`) |
+| `./pw pJ` | ... and on camel case initials (here: `post-json`) |
+| `./pw --add mypy` | add a tool to the main context (writes it to `pyproject.toml`) |
+| `./pw --clean build` | throw away all cached tools and prove it still works from scratch |
+
+### Tired of typing `./pw`?
+
+`./pw --install-px` installs the tiny `px` script in your home directory and adds it to your
+PATH. After that:
+
+* `px build` runs the project's aliases from any subdirectory, without the `./` prefix (and without
+  the Windows/linux difference between `pw` and `./pw`)
 
 
-Things you can try out:
-* show help: `./pw --help` or `./pw -h`
-* show available tools and commands: `./pw --info` or `./pw -i`
-* run a pdm command: `./pw pdm --help`
-* use httpie to execute https commands: `./pw https --help`
-* just type the first letters if you don't remember the full command: `./pw c`
-* just type enough (camel case) letters to identify an aliased command:
-  * `./pw post-json`
-  * `./pw pJ`
-  * `./pw p`
+## Your pyproject.toml *is* the build script
 
-<!-- #endregion -->
+No Makefile, no `scripts/` directory full of shell scripts that only work on one OS:
 
-## Python libraries
-Make it a habit to manage the libraries that you use with a decent dependency manager like [Poetry](https://python-poetry.org/) or [PDM](https://pdm.fming.dev/).
+```toml
+[tool.pyprojectx.main]
+requirements = ["pdm", "ruff", "prek", "px-utils", "httpie"]
+post-install = "prek install"
 
-So instead of using a _requirements.txt_, or worse, `pip install` instructions, list your dependencies in _pyproject.toml_.
-
-No need to install anything, the pyprojectx wrapper script will make sure that the tools are available.
-All the required tools are installed inside the project dir (cfg. npm dev dependencies).
-
-Experimenting with your code in a Jupyter notebook f.e., becomes as easy as `./pw notebook`.
-
-**NOTE:** you need to restart the notebook kernel to activate changes to the project.
-
-```python
-# the project and all required libraries are automatically available here
-from pycowsay.main import main as cowsay
-from px_demo import moo
-
-print("running project code")
-moo.say_moo()
-
-print("using pycowsay library")
-cowsay()
+[tool.pyprojectx.aliases]
+install = "pdm install"
+test = "pdm run pytest"
+lint = ["ruff check"]
+check = ["@lint", "@test"]
+build = ["@install", "@check", "pdm build"]
 ```
 
-## Lightweight
-The _pw_ wrapper script installs all the (Python) tools that your project uses in isolated virtual environments inside
-_.pyprojectx_.
+* **Tools are declared, not documented.** Everything in `requirements` is installed on first use and
+  pinned in [pw.lock](./pw.lock), so you, your colleagues and CI all run the exact same ruff.
+* **Aliases compose.** `@lint` refers to another alias, which turns `./pw build` into a readable
+  pipeline instead of a paragraph of setup instructions.
+* **Contexts are isolated.** `[tool.pyprojectx.jupyter]` keeps JupyterLab's dependencies away from the
+  `main` context, so PDM never has to share an environment with JupyterLab.
+* **Nobody forgets the git hooks.** `post-install = "prek install"` installs them the first time
+  anyone runs `./pw`.
 
-This is analogous to how npm stores everything in the _node_modules_ subdirectory of your project directory.
 
-All commands and arguments are then forwarded to the resp. virtual environment by just typing _./pw_ in front.
+## Your project is already installed
 
-<!-- #region jupyter={"outputs_hidden": false} pycharm={"name": "#%% md\n"} -->
+Experimenting with your own code in a notebook takes exactly one command: `./pw notebook`. The project
+is installed in editable mode, together with its dependencies.
+
+**NOTE:** restart the notebook kernel to activate changes to the project's dependencies.
+
+```python
+import os
+import shutil
+import sys
+
+# nothing was installed globally: this kernel and everything it can import
+# live in a throw-away environment inside the project directory
+print("python  :", os.path.relpath(sys.executable))
+print("pycowsay:", os.path.relpath(shutil.which("pycowsay")))
+```
+
+```python
+# the project and all its dependencies are automatically available here
+from px_demo import moo
+
+moo.say_moo()
+```
+
+## Nothing leaks onto your machine
+
+The `pw` script installs every tool context in its own virtual environment under `.pyprojectx/`, much
+like npm keeps everything in `node_modules`. Your system Python stays clean, two projects can happily
+use two different ruff versions, and `./pw clean` undoes it all.
+
+Commands and their arguments are forwarded to the right environment by typing `./pw` in front of them.
+
+
 ## Simplified CI/CD pipelines
-Run tests and build a distribution with `./pw build`. See it in action in this project's [github action workflow](.github/workflows/build.yml) or
-the [pyprojectx workflow](https://github.com/houbie/pyprojectx/tree/main/.github/workflows) for a full example.
 
-> **_NOTE:_**  If your CI/CD server runs on both linux and windows, you can merge the linux style `./pw build` and the windows style `pw build`
-> into a single command: `python pw build`
-<!-- #endregion -->
+Because the tools install themselves, there is no toolchain to set up in CI. The entire build step is:
 
-<!-- #region jupyter={"outputs_hidden": false} -->
-## Getting started with pyprojectx in your own project
-See the [documentation](https://pyprojectx.github.io/) for more details.
-<!-- #endregion -->
+```yaml
+      - name: Test and build
+        run: python pw --clean build
+```
+
+See it in action in this project's [github action workflow](.github/workflows/build.yml) or in the
+[pyprojectx workflow](https://github.com/houbie/pyprojectx/tree/main/.github/workflows) for a bigger
+example.
+
+> **_NOTE:_**  If your CI/CD server runs on both linux and windows, you can merge the linux style
+> `./pw build` and the windows style `pw build` into a single command: `python pw build`
+
+
+## Use it in your own project
+
+Copy `pw` and `pw.bat` into your repository, add a `[tool.pyprojectx]` section to your
+_pyproject.toml_ and commit them. Later on, `./pw --upgrade` fetches the latest wrapper scripts.
+See the [documentation](https://pyprojectx.github.io/) for all the details.
+
+This branch uses [PDM](https://pdm-project.org/), but pyprojectx doesn't care which dependency manager
+you prefer: the same demo is available with [uv](https://github.com/houbie/px-demo/tree/main) and
+[Poetry](https://github.com/houbie/px-demo/tree/poetry) on sibling branches.

@@ -1,11 +1,11 @@
 [tool.pyprojectx]
 lock-python-version = "3.9"
 [tool.pyprojectx.main]
-requirements = ["pdm", "ruff", "pre-commit", "px-utils", "httpie"]
-post-install = "pre-commit install"
+requirements = ["pdm", "ruff", "prek", "px-utils", "httpie"]
+post-install = "prek install"
 
 [tool.pyprojectx.jupyter]
-requirements = ["jupyterlab==4.3.0", "jupytext==1.16.4", "-e ."]
+requirements = ["jupyterlab==4.6.3", "jupytext==1.19.5", "-e ."] # install the project in editable mode
 
 [tool.pyprojectx.aliases]
 install = "pdm install"
@@ -55,6 +55,6 @@ line-length = 120
 [tool.ruff.lint]
 select = ["ALL"]
 fixable = ["ALL"]
-ignore = ["ISC001", "ANN", "FA", "FBT", "D100", "D102", "D103", "D104", "D105", "D213", "D203", "T201", "TRY003", "EM102", "COM812", "S602", "S603", "S604", "S605", "S607", "S324"]
+ignore = ["ISC001", "ANN", "CPY001", "FA", "FBT", "D100", "D102", "D103", "D104", "D105", "D213", "D203", "T201", "TRY003", "EM102", "COM812", "S602", "S603", "S604", "S605", "S607", "S324"]
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S101", "I001", "INP001"]
